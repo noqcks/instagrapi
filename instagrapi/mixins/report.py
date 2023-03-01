@@ -5,7 +5,6 @@ from instagrapi.extractors import (
 
 class ReportMixin:
     def report_post_i_dont_like(self, media_id: str):
-        # step 1: get the serialized state data for reporting
         data = {
             "trigger_event_type": "ig_report_button_clicked",
             "trigger_session_id": self.generate_uuid(),
@@ -18,8 +17,6 @@ class ReportMixin:
         }
         clicked_report_button = self.bloks_action(action='com.bloks.www.ig.ixt.triggers.bottom_sheet.ig_content', data=data, with_signature=False)
         serialized_data = extract_i_dont_like_report_serialized_data(clicked_report_button)
-
-        # step 2: report the post
         params={
             "client_input_params":{
                 "tags":["ig_i_dont_like_it_v3"]
@@ -34,6 +31,4 @@ class ReportMixin:
         }
         data = urllib.parse.urlencode({'params': params})
         result = self.bloks_action_raw(action='com.bloks.www.instagram_bloks_bottom_sheet.ixt.screen.frx_tag_selection_screen', data=data, with_signature=False)
-        print("====REPORT POST ACTION RESULT===")
-        print(result)
         return result['status'] == 'ok'
