@@ -8,6 +8,7 @@ from instagrapi.mixins.account import AccountMixin
 from instagrapi.mixins.album import DownloadAlbumMixin, UploadAlbumMixin
 from instagrapi.mixins.auth import LoginMixin
 from instagrapi.mixins.bloks import BloksMixin
+from instagrapi.mixins.report import ReportMixin
 from instagrapi.mixins.challenge import ChallengeResolveMixin
 from instagrapi.mixins.clip import DownloadClipMixin, UploadClipMixin
 from instagrapi.mixins.collection import CollectionMixin
@@ -81,6 +82,7 @@ class Client(
     UploadClipMixin,
     ReelsMixin,
     BloksMixin,
+    ReportMixin,
     TOTPMixin,
     MultipleAccountsMixin,
     NoteMixin,
