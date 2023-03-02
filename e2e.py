@@ -62,7 +62,7 @@ def handle_media(media, tags_to_report, tags_to_like, analytics, do_actions):
         do_report, reason = should_report(tags, tags_to_report)
         if do_report and do_actions:
             print("REPORTING MEDIA: ", media["id"], " because: ", reason)
-            cl.report_post_i_dont_like(media["id"])
+            cl.report_explore_media(media["id"])
             analytics["reported"] += 1
         do_like = should_like(tags, tags_to_like)
         if do_like and do_actions:
