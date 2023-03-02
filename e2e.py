@@ -7,12 +7,22 @@ from enum import Enum
 from datetime import datetime
 
 cl = Client()
-# cl.load_settings('/tmp/dump.json')
+cl.load_settings('/tmp/dump.json')
 cl.login("USERNAME", "PASSWORD")
 # cl.dump_settings('/tmp/dump.json')
 
-tags_to_report = []
-tags_to_like = ["#architecture"]
+tags_to_report = [
+    "#architecture",
+    "#interiordesigner",
+    "#furnituredesign",
+    "#homedesign",
+    "#interiordesign",
+    "#homedecor",
+    "#apartmentdecor",
+    "#bedroominspo",
+    "#livingroomdecor"
+]
+tags_to_like = []
 repeat_loop_amount = 5
 
 class REPORT_REASON(Enum):
@@ -101,7 +111,7 @@ print("==============================")
 print("== BEFORE RUN ANALYSIS == ")
 
 before_analytics = event_loop(do_actions=False)
-before_hashtags_seen_count = before_analytics["hashtags_seen_count"]
+before_hashtags_seen_count = {tag: before_analytics["hashtags_seen_count"].get(tag, 0) for tag in tags_to_like}
 print(before_analytics)
 print("==============================")
 
@@ -113,7 +123,7 @@ for i in range(repeat_loop_amount):
 
 print("== AFTER RUN ANALYSIS == ")
 after_analytics = event_loop(do_actions=False)
-after_hashtags_seen_count = after_analytics["hashtags_seen_count"]
+after_hashtags_seen_count = {tag: after_analytics["hashtags_seen_count"].get(tag, 0) for tag in tags_to_like}
 
 print(after_analytics)
 print("==== HASHTAH COUNT DIFFERENCE")
@@ -124,8 +134,14 @@ for hashtag in before_hashtags_seen_count:
     before_count = before_hashtags_seen_count[hashtag]
     after_count = after_hashtags_seen_count.get(hashtag, 0)
     count_diff = after_count - before_count
+    if before_count > 0 and after_count == 0:
+        count_diff = -1 * before_count
+    elif before_count == 0 and after_count > 0:
+        count_diff = after_count
     hashtag_count_diff[hashtag] = count_diff
 
-print(json.dumps(hashtag_count_diff, indent=4))
+for tag, count_diff in hashtag_count_diff.items():
+    sign = "+" if count_diff > 0 else ""
+    print(f"{tag}: {sign}{count_diff}")
 print("==============================")
 print("====FINISHED E2E API TESTS===")
