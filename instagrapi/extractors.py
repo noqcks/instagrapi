@@ -34,13 +34,15 @@ from .utils import InstagramIdCodec, json_value
 MEDIA_TYPES_GQL = {"GraphImage": 1, "GraphVideo": 2, "GraphSidecar": 8, "StoryVideo": 2}
 
 
-def extract_i_dont_like_report_serialized_data(data: dict):
+def extract_i_dont_like_report_serialized_data(data):
     """Extract post report serialized state"""
-    pattern = r'^(?=.*ig_i_dont_like_it_v3).*?((?:[A-Za-z0-9+/]{4}){2,}(?:[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=|[A-Za-z0-9+/][AQgw]==)).*$'
+    # make sure data is a string
+    pattern = r'(?=QVR)(?P<base64>(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?)(?=.*ig_i_dont_like_it_v3)'
     match = re.search(pattern, json.dumps(data))
     if match:
-        return match.group(1)
+        return match.group('base64')
     return ""
+
 
 def extract_media_v1(data):
     """Extract media from Private API"""
